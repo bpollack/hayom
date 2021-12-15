@@ -25,12 +25,17 @@ To read entries, you must specify any of the filtering commands.  These commands
  * `--to`/`-t`: the last timestamp to include
  * `--summary`/`-s`: show just entry titles, not bodies
  * `--count`/`-n`: how many entries to show
+ * `--on`: show entries made on a specific day
 
 You can additionally specify tags (formatted as `@tagname`) to filter entries.
 
 All of the time based commands take natural English, not just dates.  For example, this gives you all the entries between last month and this month that were about `@bob`'s `@tpsreport`:
 
     hayom -f '2 months ago' -t 'this month' @bob @tpsreport
+
+Or, if you're curious what you did last Tuesday, it's as easy as writing:
+
+    hayom --on 'last Tuesday'
 
 ## Multiple Journals
 
