@@ -12,7 +12,9 @@ export interface Config {
 
 function homeDir(): string {
   if (Deno.build.os === "windows") {
-    throw new Error("Not supported yet");
+    const home = Deno.env.get("USERPROFILE");
+    if (home == null) throw new Error("USERPROFILE missing");
+    return home;
   } else {
     const home = Deno.env.get("HOME");
     if (home == null) throw new Error("$HOME missing");
@@ -22,7 +24,9 @@ function homeDir(): string {
 
 function configDir(): string {
   if (Deno.build.os === "windows") {
-    throw new Error("Not supported yet");
+    const profile = Deno.env.get("APPDATA");
+    if (profile == null) throw new Error("APPDATA missing");
+    return profile;
   } else {
     let configRoot = Deno.env.get("XDG_CONFIG_HOME");
     if (configRoot == null) {
@@ -37,7 +41,10 @@ function defaultConfigPath(): string {
 }
 
 function defaultJournalPath(): string {
-  return path.join(homeDir(), ".journal");
+  return path.join(
+    homeDir(),
+    Deno.build.os === "windows" ? "hayom.txt" : ".hayom",
+  );
 }
 
 function defaultEditor(): string {
