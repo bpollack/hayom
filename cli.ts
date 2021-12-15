@@ -49,7 +49,7 @@ function readEntries(entries: Entry[], opts: flags.Args) {
 }
 
 async function edit(body: string, editor: string[]) {
-  const temp = Deno.makeTempFileSync({ suffix: ".jrnl" });
+  const temp = Deno.makeTempFileSync({ suffix: ".hayom" });
   try {
     Deno.writeTextFileSync(temp, body);
     const proc = Deno.run({ cmd: [...editor, temp] });
