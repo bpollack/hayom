@@ -50,3 +50,5 @@ Hayom works fine with no configuration file.  If you do that, it will make a jou
 
     [journals.personal]
     journal = "/home/benjamin/journals/personal.txt"
+
+[jrnl]: https://jrnl.sh
