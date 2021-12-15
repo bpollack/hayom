@@ -6,7 +6,8 @@ The file format of Hayom is identical to jrnl, so it's easy to point both tools 
 
 ## Installation
 
-    deno install -n hayom --allow-env --allow-read --allow-write https://git.sr.ht/~bmp/hayom/blob/main/cli.ts
+    deno install -n hayom --allow-env --allow-read --allow-write --allow-run \
+        https://git.sr.ht/~bmp/hayom/blob/main/cli.ts
 
 ## Usage
 
