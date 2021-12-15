@@ -48,11 +48,11 @@ function readEntries(entries: Entry[], opts: flags.Args) {
   }
 }
 
-async function edit(body: string) {
+async function edit(body: string, editor: string[]) {
   const temp = Deno.makeTempFileSync({ suffix: ".jrnl" });
   try {
     Deno.writeTextFileSync(temp, body);
-    const proc = Deno.run({ cmd: ["kak", temp] });
+    const proc = Deno.run({ cmd: [...editor, temp] });
     const status = await proc.status();
     if (status.success) {
       return Deno.readTextFileSync(temp);
@@ -95,7 +95,9 @@ async function main() {
   ) {
     readEntries(entries, opts);
   } else {
-    const rawEntry = opts._.length > 0 ? opts._.join(" ") : await edit("");
+    const rawEntry = opts._.length > 0
+      ? opts._.join(" ")
+      : await edit("", config.editor.split(/\s/));
     if (rawEntry && rawEntry.trim() !== "") {
       const entry = makeEntry(rawEntry);
       entries.push(entry);
