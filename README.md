@@ -66,7 +66,7 @@ If you don't specify a journal, hayom will use the default.
 ## Configuration
 
 Hayom works fine with no configuration file. If you do that, it will make a
-journal called `.journal` in your `$HOME`. Alternatively, you can create a file
+journal called `.hayom` in your `$HOME`. Alternatively, you can create a file
 called `$XDG_CONFIG_HOME/hayom/hayom.toml` with your configuration options. An
 example configuration file might look like:
 
