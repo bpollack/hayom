@@ -66,13 +66,19 @@ async function main() {
   const args = [...Deno.args];
   const config = loadConfig();
 
-  let path;
-  if (args.length > 0 && Object.hasOwn(config.journals, args[0])) {
-    path = config.journals[args[0]].journal;
-    args.shift();
-  } else {
-    path = config.journals[config.default].journal;
-  }
+  const opts = flags.parse(args, {
+    boolean: ["summary"],
+    alias: {
+      "s": ["summary"],
+      "f": ["from"],
+      "t": ["to"],
+      "n": ["count"],
+      "j": ["journal"],
+    },
+  });
+
+  const journal = opts.journal ?? config.default;
+  const path = config.journals[journal].journal;
 
   try {
     Deno.lstatSync(path);
@@ -83,10 +89,6 @@ async function main() {
   }
 
   const entries = loadEntries(path);
-  const opts = flags.parse(args, {
-    boolean: ["summary"],
-    alias: { "s": ["summary"], "f": ["from"], "t": ["to"], "n": ["count"] },
-  });
 
   if (
     ["from", "f", "to", "t", "on", "count", "n"].some((arg) => arg in opts) ||
