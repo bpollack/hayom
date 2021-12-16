@@ -7,4 +7,7 @@
   "[typescript]": {
     "editor.defaultFormatter": "denoland.vscode-deno",
   },
+  "cSpell.words": [
+    "hayom"
+  ],
 }
