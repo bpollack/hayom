@@ -1,0 +1,9 @@
+image: alpine/edge
+sources:
+  - https://git.sr.ht/~bmp/hayom
+secrets:
+  - 9ab5e22a-86a6-4a5c-af42-23d0990363f8
+tasks:
+  - mirror: |
+      cd hayom
+      GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git push -f git@github.com:bpollack/hayom main
