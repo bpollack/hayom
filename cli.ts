@@ -62,6 +62,19 @@ async function edit(body: string, editor: string[]) {
   }
 }
 
+function printHelp() {
+  console.log(`
+usage: hayom [-j journal] ...
+options:
+   --summary | -s: print summary line only
+   --from | -f:    from timestamp
+   --to | -t:      to timestamp
+   --on:           on timestamp
+   --count | -n:   number of entries to print
+   --journal | -j: journal to use
+`);
+}
+
 async function main() {
   const args = [...Deno.args];
   const config = loadConfig();
@@ -76,6 +89,11 @@ async function main() {
       "j": ["journal"],
     },
   });
+
+  if (opts.help) {
+    printHelp();
+    return;
+  }
 
   const journal = opts.journal ?? config.default;
   const path = config.journals[journal].journal;
