@@ -68,7 +68,7 @@ export function makeEntry(rawText: string, created?: DateTime): Entry {
   return { date, title, body };
 }
 
-interface FilterParams {
+export interface FilterParams {
   from?: DateTime;
   to?: DateTime;
   limit?: number;

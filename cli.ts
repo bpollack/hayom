@@ -4,6 +4,7 @@ import { loadConfig } from "./config.ts";
 import {
   Entry,
   filterEntries,
+  FilterParams,
   makeEntry,
   parseEntries,
   printEntry,
@@ -14,41 +15,26 @@ function tryDate(d?: string): DateTime | undefined {
   return d ? DateTime.fromJSDate(parseDate(d)) : undefined;
 }
 
-function readEntries(entries: Entry[], opts: flags.Args) {
-  let from = tryDate(opts.from);
-  let to = tryDate(opts.to);
-  if (opts.on) {
-    const on = tryDate(opts.on);
-    if (typeof on !== "object") {
-      throw new Error("Bad date");
-    }
-    [from, to] = [on.startOf("day"), on.endOf("day")];
-  }
-  const tags = opts._.filter((arg) =>
-    typeof arg === "string" && arg.match(/^@./)
-  ) as string[];
-  const limit = opts.limit;
-
-  const filtered = filterEntries(
-    entries,
-    {
-      from,
-      to,
-      limit,
-      tags,
-    },
-  );
+function printFilteredEntries(
+  entries: Entry[],
+  params: FilterParams,
+  summary: boolean,
+) {
+  const filtered = filterEntries(entries, params);
   let first = true;
   for (const entry of filtered) {
-    if (!first && !opts.summary) {
+    if (!first && !summary) {
       console.log();
     }
     first = false;
-    printEntry(entry, opts.summary);
+    printEntry(entry, summary);
   }
 }
 
-async function edit(body: string, editor: string[]) {
+async function edit(
+  body: string,
+  editor: string[],
+): Promise<string | undefined> {
   const temp = Deno.makeTempFileSync({ suffix: ".hayom" });
   try {
     Deno.writeTextFileSync(temp, body);
@@ -66,12 +52,12 @@ function printHelp() {
   console.log(`
 usage: hayom [-j journal] ...
 options:
-   --summary | -s: print summary line only
-   --from | -f:    from timestamp
-   --to | -t:      to timestamp
-   --on:           on timestamp
    --count | -n:   number of entries to print
+   --from | -f:    from timestamp
    --journal | -j: journal to use
+   --on:           on timestamp
+   --summary | -s: print summary line only
+   --to | -t:      to timestamp
 `);
 }
 
@@ -82,11 +68,11 @@ async function main() {
   const opts = flags.parse(args, {
     boolean: ["summary"],
     alias: {
-      "s": ["summary"],
       "f": ["from"],
-      "t": ["to"],
-      "n": ["count"],
       "j": ["journal"],
+      "n": ["count"],
+      "s": ["summary"],
+      "t": ["to"],
     },
   });
 
@@ -113,7 +99,24 @@ async function main() {
     (opts._.length > 0 &&
       opts._.every((e) => typeof e === "string" && e[0] === "@"))
   ) {
-    readEntries(entries, opts);
+    let from = tryDate(opts.from);
+    let to = tryDate(opts.to);
+    if (opts.on) {
+      const on = tryDate(opts.on);
+      if (typeof on !== "object") {
+        throw new Error("Bad date");
+      }
+      [from, to] = [on.startOf("day"), on.endOf("day")];
+    }
+    const tags = <string[]> opts._.filter((arg) =>
+      typeof arg === "string" && arg.match(/^@./)
+    );
+    printFilteredEntries(entries, {
+      from,
+      to,
+      tags,
+      limit: opts.count,
+    }, opts.summary);
   } else {
     const rawEntry = opts._.length > 0
       ? opts._.join(" ")
