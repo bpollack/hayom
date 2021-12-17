@@ -52,6 +52,15 @@ Or, if you're curious what you did last Tuesday, it's as easy as writing:
 
     hayom --on 'last Tuesday'
 
+## Editing
+
+For any of the filtering commands, if you add `-e`/`--edit`, those entries will
+pop up in the editor of your choice. There, you can add extra entries, change
+timestamps, delete entries, and whatever else floats your boat. For example, to
+edit everything I wrote yesterday, I might do
+
+    hayom -f yesterday -e
+
 ## Multiple Journals
 
 You can have multiple journals. If you do, simply specify the journal you want
