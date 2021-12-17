@@ -26,8 +26,8 @@ function parseEntry(header: string, body: string): Entry {
 }
 
 export function parseEntries(bodies: string): Entry[] {
-  const entries = bodies.split(/^(\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}\] .*)\n/m)
-    .slice(1);
+  const entries = bodies.split(/^(\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}\] .*)\n/m);
+  if (entries[0].trim() === "") entries.splice(0, 1);
   return chunk(entries, 2).map((e) => parseEntry(e[0], e[1].trim()));
 }
 
@@ -46,6 +46,7 @@ export function saveEntries(path: string, entries: Entry[]) {
   try {
     entries.sort((a, b) => a.date.valueOf() - b.date.valueOf());
     file = Deno.openSync(path, { write: true });
+    Deno.ftruncateSync(file.rid);
     let first = true;
     const nl = new Uint8Array([10]);
     for (const entry of entries) {
@@ -75,13 +76,17 @@ export interface FilterParams {
   tags?: string[];
 }
 
-export function filterEntries(entries: Entry[], params: FilterParams): Entry[] {
-  const filtered = entries.filter((e) =>
-    (params.from ? params.from <= e.date : true) &&
-    (params.to ? params.to >= e.date : true) &&
+export function matchesFilter(entry: Entry, params: FilterParams) {
+  return (params.from ? params.from <= entry.date : true) &&
+    (params.to ? params.to >= entry.date : true) &&
     (params.tags
-      ? params.tags.every((t) => e.title.includes(t) || e.body.includes(t))
-      : true)
-  );
+      ? params.tags.every((t) =>
+        entry.title.includes(t) || entry.body.includes(t)
+      )
+      : true);
+}
+
+export function filterEntries(entries: Entry[], params: FilterParams): Entry[] {
+  const filtered = entries.filter((e) => matchesFilter(e, params));
   return params.limit ? filtered.slice(params.limit) : filtered;
 }

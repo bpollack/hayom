@@ -1,13 +1,15 @@
 import { DateTime, parseDate } from "./deps.ts";
-import { flags } from "./deps.ts";
+import { flags, partition } from "./deps.ts";
 import { loadConfig } from "./config.ts";
 import {
   Entry,
   filterEntries,
   FilterParams,
   makeEntry,
+  matchesFilter,
   parseEntries,
   printEntry,
+  renderEntry,
   saveEntries,
 } from "./mod.ts";
 
@@ -48,11 +50,33 @@ async function edit(
   }
 }
 
+async function editFilteredEntries(
+  entries: Entry[],
+  filter: FilterParams,
+  editor: string[],
+): Promise<Entry[] | undefined> {
+  const [toEdit, toKeep] = partition(entries, (e) => matchesFilter(e, filter));
+  const temp = Deno.makeTempFileSync({ suffix: ".hayom" });
+  try {
+    Deno.writeTextFileSync(temp, toEdit.map(renderEntry).join("\n"));
+    const proc = Deno.run({ cmd: [...editor, temp] });
+    const status = await proc.status();
+    if (status.success) {
+      const rawEntries = Deno.readTextFileSync(temp).replace("\r", "");
+      const newEntries = parseEntries(rawEntries);
+      return [...toKeep, ...newEntries];
+    }
+  } finally {
+    Deno.remove(temp);
+  }
+}
+
 function printHelp() {
   console.log(`
 usage: hayom [-j journal] ...
 options:
    --count | -n:   number of entries to print
+   --edit | -e:    edit entries
    --from | -f:    from timestamp
    --journal | -j: journal to use
    --on:           on timestamp
@@ -68,6 +92,7 @@ async function main() {
   const opts = flags.parse(args, {
     boolean: ["summary"],
     alias: {
+      "e": ["edit"],
       "f": ["from"],
       "j": ["journal"],
       "n": ["count"],
@@ -92,7 +117,7 @@ async function main() {
     } else throw e;
   }
 
-  const entries = parseEntries(Deno.readTextFileSync(path));
+  const entries = parseEntries(Deno.readTextFileSync(path).replace("\r", ""));
 
   if (
     ["from", "f", "to", "t", "on", "count", "n"].some((arg) => arg in opts) ||
@@ -111,16 +136,25 @@ async function main() {
     const tags = <string[]> opts._.filter((arg) =>
       typeof arg === "string" && arg.match(/^@./)
     );
-    printFilteredEntries(entries, {
-      from,
-      to,
-      tags,
-      limit: opts.count,
-    }, opts.summary);
+
+    const filter = { from, to, tags, limit: opts.count };
+
+    if (opts.edit) {
+      const newEntries = await editFilteredEntries(
+        entries,
+        filter,
+        config.editor,
+      );
+      if (newEntries != null) {
+        saveEntries(path, newEntries);
+      }
+    } else {
+      printFilteredEntries(entries, filter, opts.summary);
+    }
   } else {
     const rawEntry = opts._.length > 0
       ? opts._.join(" ")
-      : await edit("", config.editor.split(/\s/));
+      : await edit("", config.editor);
     if (rawEntry && rawEntry.trim() !== "") {
       const entry = makeEntry(rawEntry);
       entries.push(entry);

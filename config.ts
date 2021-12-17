@@ -1,7 +1,7 @@
 import { path, toml } from "./deps.ts";
 
 export interface Config {
-  editor: string;
+  editor: string[];
   default: string;
   journals: {
     [name: string]: {
@@ -47,12 +47,12 @@ function defaultJournalPath(): string {
   );
 }
 
-function defaultEditor(): string {
+function defaultEditor(): string[] {
   const editor = Deno.env.get("EDITOR");
-  if (editor != null) return editor;
+  if (editor != null) return editor.split(" ");
   // FIXME: should do something more reasonable than this
-  if (Deno.build.os == "windows") return "notepad.exe";
-  else return "nano";
+  if (Deno.build.os == "windows") return ["notepad.exe"];
+  else return ["nano"];
 }
 
 export function loadConfig(): Config {
@@ -68,7 +68,11 @@ export function loadConfig(): Config {
 
   try {
     const userConfig = toml.parse(Deno.readTextFileSync(defaultConfigPath()));
-    return { ...defaultConfig, ...userConfig };
+    const mergedConfig = { ...defaultConfig, ...userConfig };
+    if (typeof userConfig.editor === "string") {
+      mergedConfig.editor = userConfig.editor.split(" ");
+    }
+    return mergedConfig;
   } catch {
     return defaultConfig;
   }
