@@ -94,13 +94,22 @@ example configuration file might look like:
     [journals.personal]
     journal = "/home/benjamin/journals/personal.txt"
 
+## Bugs
+
+If you have a bug report, please let me know via
+[the `discuss` email list][user]. You can also submit directly via [the bug
+tracker][bugs], but if you do, please be 100% sure that it's a legitimate bug,
+and not a feature request or the like. I try to keep the tracker focused purely
+on genuine issues.
+
 ## Submitting Patches
 
 If you feel comfortable using `git send-email`, please kick your patches off to
-[the hayom-devel mailing list](mailto:~bmp/hayom-devel@lists.sr.ht). If you
-prefer GitHub, I absolutely pay attention to PRs that come in via
-[the GitHub mirror][github].
+[the hayom-devel mailing list][user]. If you prefer GitHub, I absolutely pay
+attention to PRs that come in via [the GitHub mirror][github].
 
 [jrnl]: https://jrnl.sh
 [github]: https://github.com/bpollack/hayom
 [ed]: https://www.gnu.org/fun/jokes/ed-msg.en.html
+[user]: mailto:~bmp/hayom-discuss@lists.sr.ht
+[devel]: mailto:~bmp/hayom-devel@lists.sr.ht
