@@ -25,11 +25,19 @@ function parseEntry(header: string, body: string): Entry {
   return { date, title, body };
 }
 
-export function loadEntries(path: string): Entry[] {
-  const text = Deno.readTextFileSync(path);
-  const entries = text.split(/^(\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}\] .*)\n/m)
+export function parseEntries(bodies: string): Entry[] {
+  const entries = bodies.split(/^(\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}\] .*)\n/m)
     .slice(1);
-  return chunk(entries, 2).map((e) => parseEntry(e[0], e[1]));
+  return chunk(entries, 2).map((e) => parseEntry(e[0], e[1].trim()));
+}
+
+export function renderEntry(entry: Entry): string {
+  let text = `[${entry.date.toFormat(DATE_STRING)}] ${entry.title.trim()}\n`;
+  const body = entry.body?.trim();
+  if (body != null && body !== "") {
+    text += body + "\n";
+  }
+  return text;
 }
 
 export function saveEntries(path: string, entries: Entry[]) {
@@ -45,15 +53,7 @@ export function saveEntries(path: string, entries: Entry[]) {
         file.writeSync(nl);
       }
       first = false;
-      file.writeSync(
-        encoder.encode(
-          `[${entry.date.toFormat(DATE_STRING)}] ${entry.title.trim()}\n`,
-        ),
-      );
-      const body = entry.body?.trim();
-      if (body != null && body !== "") {
-        file.writeSync(encoder.encode(body + "\n"));
-      }
+      file.writeSync(encoder.encode(renderEntry(entry)));
     }
   } finally {
     file?.close();

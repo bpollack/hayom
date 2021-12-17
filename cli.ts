@@ -4,8 +4,8 @@ import { loadConfig } from "./config.ts";
 import {
   Entry,
   filterEntries,
-  loadEntries,
   makeEntry,
+  parseEntries,
   printEntry,
   saveEntries,
 } from "./mod.ts";
@@ -106,7 +106,7 @@ async function main() {
     } else throw e;
   }
 
-  const entries = loadEntries(path);
+  const entries = parseEntries(Deno.readTextFileSync(path));
 
   if (
     ["from", "f", "to", "t", "on", "count", "n"].some((arg) => arg in opts) ||
