@@ -94,18 +94,18 @@ example configuration file might look like:
     [journals.personal]
     journal = "/home/benjamin/journals/personal.txt"
 
-## Bugs
+## Community
 
-If you have a bug report, please let me know via
-[the `discuss` email list][user]. You can also submit directly via [the bug
-tracker][bugs], but if you do, please be 100% sure that it's a legitimate bug,
-and not a feature request or the like. I try to keep the tracker focused purely
-on genuine issues.
+Feel free to come discuss Hayom either on [the `discuss` mailing list][user] or
+[in our IRC channel][irc]. These are also great places to report bugs to fix.
+
+There is also [an `announce` mailing list][announce] if you just want to be kept
+up-to-date on new releases.
 
 ## Submitting Patches
 
 If you feel comfortable using `git send-email`, please kick your patches off to
-[the hayom-devel mailing list][devel]. If you prefer GitHub, I absolutely pay
+[the `devel` mailing list][devel]. If you prefer GitHub, I absolutely pay
 attention to PRs that come in via [the GitHub mirror][github].
 
 [jrnl]: https://jrnl.sh
@@ -113,3 +113,5 @@ attention to PRs that come in via [the GitHub mirror][github].
 [ed]: https://www.gnu.org/fun/jokes/ed-msg.en.html
 [user]: mailto:~bmp/hayom-discuss@lists.sr.ht
 [devel]: mailto:~bmp/hayom-devel@lists.sr.ht
+[announce]: mailto:~bmp/hayom-announce@lists.sr.ht
+[irc]: irc://irc.libera.chat/#hayom
