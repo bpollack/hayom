@@ -105,7 +105,7 @@ on genuine issues.
 ## Submitting Patches
 
 If you feel comfortable using `git send-email`, please kick your patches off to
-[the hayom-devel mailing list][user]. If you prefer GitHub, I absolutely pay
+[the hayom-devel mailing list][devel]. If you prefer GitHub, I absolutely pay
 attention to PRs that come in via [the GitHub mirror][github].
 
 [jrnl]: https://jrnl.sh
