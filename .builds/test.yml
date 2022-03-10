@@ -11,4 +11,4 @@ tasks:
       deno cache -r --lock=lock.json deps.ts test.ts
   - test: |
       cd hayom
-      deno test
+      deno test --allow-env
