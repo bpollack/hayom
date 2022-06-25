@@ -12,6 +12,8 @@ Over time, this likely will change in a subtle and fairly backwards-compatible
 way, for the basic reason that I want a blank line between the entry title and
 the entry body. But for now, you're golden.
 
+[![builds.sr.ht status](https://builds.sr.ht/~bmp/hayom/commits/main/test.yml.svg)](https://builds.sr.ht/~bmp/hayom/commits/main/test.yml?)
+
 ## Installation
 
     deno install -n hayom --allow-env --allow-read --allow-write --allow-run \
