@@ -1,0 +1,5 @@
+{
+  "tasks": {
+    "rebuild-deps": "deno cache -r --lock=lock.json --lock-write ./deps.ts ./test.ts"
+  }
+}
