@@ -13,8 +13,8 @@ import {
   saveEntries,
 } from "./mod.ts";
 
-function tryDate(d?: string): DateTime | undefined {
-  return d ? DateTime.fromJSDate(parseDate(d)) : undefined;
+function tryDate(d?: unknown): DateTime | undefined {
+  return typeof d === "string" ? DateTime.fromJSDate(parseDate(d)) : undefined;
 }
 
 function printFilteredEntries(
@@ -106,7 +106,9 @@ async function main() {
     return;
   }
 
-  const journal = opts.journal ?? config.default;
+  const journal = typeof opts.journal === "string"
+    ? opts.journal
+    : config.default;
   const path = config.journals[journal].journal;
 
   try {
@@ -137,7 +139,7 @@ async function main() {
       typeof arg === "string" && arg.match(/^@./)
     );
 
-    const filter = { from, to, tags, limit: opts.count };
+    const filter = { from, to, tags, limit: opts.count as number };
 
     if (opts.edit) {
       const newEntries = await editFilteredEntries(
