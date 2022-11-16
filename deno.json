@@ -1,5 +1,7 @@
 {
   "tasks": {
-    "rebuild-deps": "deno cache --lock-write -r ./deps.ts ./test.ts"
+    "rebuild-deps": "deno cache --lock-write -r ./deps.ts ./test.ts",
+    "cache": "deno cache --lock -r ./deps.ts ./test.ts",
+    "test": "deno test --allow-env --check"
   }
 }
