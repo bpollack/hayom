@@ -1,9 +1,9 @@
-import * as flags from "https://deno.land/std@0.161.0/flags/mod.ts";
-import * as path from "https://deno.land/std@0.161.0/path/mod.ts";
-import * as toml from "https://deno.land/std@0.161.0/encoding/toml.ts";
-import { chunk } from "https://deno.land/std@0.161.0/collections/chunk.ts";
+import * as flags from "https://deno.land/std@0.164.0/flags/mod.ts";
+import * as path from "https://deno.land/std@0.164.0/path/mod.ts";
+import * as toml from "https://deno.land/std@0.164.0/encoding/toml.ts";
+import { chunk } from "https://deno.land/std@0.164.0/collections/chunk.ts";
 import { DateTime } from "https://esm.sh/luxon@~3.0.1";
-import { partition } from "https://deno.land/std@0.161.0/collections/partition.ts";
+import { partition } from "https://deno.land/std@0.164.0/collections/partition.ts";
 import parseDate from "https://esm.sh/date.js@0.3.3";
 
 export { chunk, DateTime, flags, parseDate, partition, path, toml };
