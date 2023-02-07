@@ -1,6 +1,7 @@
 image: archlinux
 packages:
   - deno
+  - just
 sources:
   - https://git.sr.ht/~bmp/hayom
 secrets:
@@ -8,7 +9,7 @@ secrets:
 tasks:
   - deps: |
       cd hayom
-      deno task cache
+      just build
   - test: |
       cd hayom
-      deno task test
+      just test
