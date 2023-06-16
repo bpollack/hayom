@@ -50,8 +50,8 @@ function defaultJournalPath(): string {
 function defaultEditor(): string[] {
   const editor = Deno.env.get("EDITOR");
   if (editor != null) return editor.split(" ");
-  // FIXME: should do something more reasonable than this
-  if (Deno.build.os == "windows") return ["notepad.exe"];
+
+  if (Deno.build.os == "windows") return ["cmd", "/c", "start"];
   else return ["nano"];
 }
 
