@@ -43,7 +43,7 @@ function defaultConfigPath(): string {
 function defaultJournalPath(): string {
   return path.join(
     homeDir(),
-    Deno.build.os === "windows" ? "hayom.txt" : ".hayom",
+    Deno.build.os === "windows" ? "hayom.md" : ".hayom.md",
   );
 }
 
